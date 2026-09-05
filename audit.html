@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Audit Trail</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header h1 {
+    margin-bottom: 5px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(200px, 1fr));
+
+    gap: 18px;
+
+    margin-top: 25px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.table-box {
+    background: white;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 13px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #172b4d;
+    color: white;
+}
+
+tr:hover {
+    background: #f5f7fa;
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.upload {
+    background: #e7f6ec;
+    color: #176b35;
+}
+
+.access {
+    background: #eaf1ff;
+    color: #174ea6;
+}
+
+.modify {
+    background: #fff3d6;
+    color: #8a5a00;
+}
+
+button {
+    margin-top: 25px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #666;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+}
+
+.security {
+    margin-top: 25px;
+    padding: 15px;
+
+    background: #eaf7ee;
+    color: #176b35;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+🛡️ EvidenceGuard — Audit Trail
+
+</div>
+
+
+<div class="container">
+
+
+<div class="header">
+
+<div>
+
+<h1>
+🔎 Complete Audit Trail
+</h1>
+
+<p>
+Every document activity is recorded for
+security and compliance.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- SUMMARY -->
+
+<div class="summary">
+
+
+<div class="card">
+
+<h3>
+📤 Documents Uploaded
+</h3>
+
+<div
+class="number"
+id="uploadCount">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+👁️ Documents Accessed
+</h3>
+
+<div
+class="number"
+id="accessCount">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+✏️ Documents Modified
+</h3>
+
+<div
+class="number"
+id="modifyCount">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+📊 Total Activities
+</h3>
+
+<div
+class="number"
+id="totalCount">
+
+0
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="security">
+
+🔐 Audit Logging ACTIVE |
+⛓️ Blockchain Record READY |
+🛡️ Tamper Monitoring ACTIVE
+
+</div>
+
+
+<!-- AUDIT TABLE -->
+
+<div class="table-box">
+
+<h2>
+📋 Document Activity Log
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Action
+</th>
+
+<th>
+Case ID
+</th>
+
+<th>
+Document
+</th>
+
+<th>
+Officer ID
+</th>
+
+<th>
+Date & Time
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="auditTable">
+
+<tr>
+
+<td colspan="5">
+
+Loading audit records...
+
+</td>
+
+</tr>
+
+</tbody>
+
+
+</table>
+
+</div>
+
+
+<button
+onclick="location.href='dashboard.html'">
+
+← Back to Dashboard
+
+</button>
+
+
+</div>
+
+
+<script>
+
+
+async function loadAudit() {
+
+
+const table =
+document.getElementById(
+    "auditTable"
+);
+
+
+try {
+
+
+const response =
+await fetch(
+    "/api/audit"
+);
+
+
+const data =
+await response.json();
+
+
+if (!data.success) {
+
+throw new Error(
+    "Unable to load audit records"
+);
+
+}
+
+
+const logs =
+data.logs || [];
+
+
+document.getElementById(
+    "totalCount"
+).innerText =
+logs.length;
+
+
+const uploads =
+logs.filter(
+    log =>
+        log.action ===
+        "DOCUMENT UPLOADED"
+);
+
+
+const accesses =
+logs.filter(
+    log =>
+        log.action ===
+        "DOCUMENT ACCESSED"
+);
+
+
+const modifications =
+logs.filter(
+    log =>
+        log.action ===
+        "DOCUMENT MODIFIED"
+);
+
+
+document.getElementById(
+    "uploadCount"
+).innerText =
+uploads.length;
+
+
+document.getElementById(
+    "accessCount"
+).innerText =
+accesses.length;
+
+
+document.getElementById(
+    "modifyCount"
+).innerText =
+modifications.length;
+
+
+if (logs.length === 0) {
+
+
+table.innerHTML = `
+
+<tr>
+
+<td colspan="5"
+class="empty">
+
+📂 No audit records available.
+
+</td>
+
+</tr>
+
+`;
+
+
+return;
+
+}
+
+
+table.innerHTML = "";
+
+
+logs
+.slice()
+.reverse()
+.forEach(
+    function(log) {
+
+
+let badgeClass =
+"";
+
+
+if (
+    log.action ===
+    "DOCUMENT UPLOADED"
+) {
+
+badgeClass =
+"upload";
+
+}
+
+else if (
+    log.action ===
+    "DOCUMENT ACCESSED"
+) {
+
+badgeClass =
+"access";
+
+}
+
+else if (
+    log.action ===
+    "DOCUMENT MODIFIED"
+) {
+
+badgeClass =
+"modify";
+
+}
+
+
+const row =
+document.createElement(
+    "tr"
+);
+
+
+row.innerHTML = `
+
+<td>
+
+<span class="badge ${badgeClass}">
+
+${log.action || "ACTIVITY"}
+
+</span>
+
+</td>
+
+
+<td>
+
+${log.caseId || "N/A"}
+
+</td>
+
+
+<td>
+
+${log.documentName || log.fileName || "N/A"}
+
+</td>
+
+
+<td>
+
+👤 ${log.officerId || "N/A"}
+
+</td>
+
+
+<td>
+
+🕐 ${log.dateTime || "N/A"}
+
+</td>
+
+`;
+
+
+table.appendChild(row);
+
+
+});
+
+}
+
+
+catch(error) {
+
+
+console.error(error);
+
+
+table.innerHTML = `
+
+<tr>
+
+<td colspan="5"
+class="empty">
+
+❌ Unable to load audit records.
+
+<br><br>
+
+${error.message}
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+}
+
+
+loadAudit();
+
+
+</script>
+
+
+</body>
+
+</html>

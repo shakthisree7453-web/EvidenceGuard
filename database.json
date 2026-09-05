@@ -1,0 +1,101 @@
+{
+  "users": [],
+  "documents": [
+    {
+      "caseId": "CASE-001",
+      "documentType": "FIR",
+      "documentName": "FIR Report",
+      "fileName": "1788609144343-Screenshot_2026-05-12_203939.png",
+      "originalName": "Screenshot 2026-05-12 203939.png",
+      "uploadedBy": "POL1001",
+      "uploadedAt": "2026-09-05T11:42:17.289Z",
+      "version": 2,
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab"
+    }
+  ],
+  "versions": [
+    {
+      "caseId": "CASE-001",
+      "documentName": "FIR Report",
+      "version": 1,
+      "fileName": "1788608537281-Screenshot_2026-05-12_203939.png",
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "modifiedBy": "POL1001",
+      "modifiedAt": "2026-09-05T11:42:17.289Z",
+      "action": "UPLOADED"
+    },
+    {
+      "caseId": "CASE-001",
+      "documentName": "FIR Report",
+      "version": 2,
+      "fileName": "1788609144343-Screenshot_2026-05-12_203939.png",
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "modifiedBy": "POL1001",
+      "modifiedAt": "2026-09-05T11:52:24.352Z",
+      "action": "MODIFIED"
+    }
+  ],
+  "auditLogs": [
+    {
+      "action": "LOGIN",
+      "officerId": "POL1001",
+      "officerName": "Arun Kumar",
+      "role": "Higher Official",
+      "dateTime": "2026-09-05T11:37:29.571Z"
+    },
+    {
+      "action": "LOGIN",
+      "officerId": "POL1001",
+      "officerName": "Arun Kumar",
+      "role": "Higher Official",
+      "dateTime": "2026-09-05T11:37:39.438Z"
+    },
+    {
+      "action": "DOCUMENT UPLOADED",
+      "caseId": "CASE-001",
+      "documentName": "FIR Report",
+      "officerId": "POL1001",
+      "version": 1,
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "dateTime": "2026-09-05T11:42:17.289Z"
+    },
+    {
+      "action": "DOCUMENT MODIFIED",
+      "caseId": "CASE-001",
+      "documentName": "FIR Report",
+      "officerId": "POL1001",
+      "version": 2,
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "dateTime": "2026-09-05T11:52:24.352Z"
+    },
+    {
+      "action": "LOGIN",
+      "officerId": "POL1001",
+      "officerName": "Arun Kumar",
+      "role": "Higher Official",
+      "dateTime": "2026-09-05T12:00:35.732Z"
+    }
+  ],
+  "blockchainRecords": [
+    {
+      "documentName": "FIR Report",
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "officerId": "POL1001",
+      "action": "DOCUMENT UPLOADED",
+      "version": 1,
+      "timestamp": "2026-09-05T11:42:17.289Z",
+      "previousHash": "GENESIS",
+      "blockHash": "92fd41858f7075ff5037c866180561608d52a47740cded31e6c3e755a46a35fa"
+    },
+    {
+      "documentName": "FIR Report",
+      "hash": "a23880dae27ab45cf0a79424bf2e41a544144f9d10b315db541f68526318eeab",
+      "officerId": "POL1001",
+      "action": "DOCUMENT MODIFIED",
+      "version": 2,
+      "timestamp": "2026-09-05T11:52:24.352Z",
+      "previousHash": "92fd41858f7075ff5037c866180561608d52a47740cded31e6c3e755a46a35fa",
+      "blockHash": "6047022d68eaa5c5b2212f5e5a5355abb0c8c9d7d118452a9b50922ec1ded4ec"
+    }
+  ]
+}

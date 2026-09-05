@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Modify Document</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+h1 {
+    color: #172b4d;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccd5e0;
+    border-radius: 7px;
+}
+
+button {
+    margin-top: 22px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #172b4d;
+    color: white;
+    cursor: pointer;
+}
+
+.back {
+    background: #666;
+    margin-left: 8px;
+}
+
+#message {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.info {
+    background: #fff7df;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+🛡️ EvidenceGuard — Modify Document
+
+</div>
+
+
+<div class="container">
+
+<div class="box">
+
+<h1>
+✏️ Create New Document Version
+</h1>
+
+<p>
+Modifying a document creates a new version.
+The previous version remains preserved.
+</p>
+
+
+<div class="info">
+
+🔐 Version Control ACTIVE<br><br>
+
+⛓️ Blockchain Integrity READY<br><br>
+
+📋 Modification Audit ACTIVE
+
+</div>
+
+
+<form id="modifyForm">
+
+
+<label>
+Case ID
+</label>
+
+<input
+type="text"
+id="caseId"
+value="CASE-001"
+required
+>
+
+
+<label>
+Document Name
+</label>
+
+<input
+type="text"
+id="documentName"
+required
+>
+
+
+<label>
+Select Modified Document
+</label>
+
+<input
+type="file"
+id="document"
+required
+>
+
+
+<button type="submit">
+
+✏️ Create New Version
+
+</button>
+
+
+<button
+type="button"
+class="back"
+onclick="location.href='documents.html'">
+
+← Back
+
+</button>
+
+
+</form>
+
+
+<p id="message"></p>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+
+const officerId =
+localStorage.getItem("officerId") ||
+"POL1001";
+
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+
+const documentName =
+params.get("documentName");
+
+
+if (documentName) {
+
+document.getElementById(
+"documentName"
+).value =
+decodeURIComponent(
+documentName
+);
+
+}
+
+
+// ======================================
+// MODIFY
+// ======================================
+
+document
+.getElementById("modifyForm")
+.addEventListener(
+"submit",
+async function(event) {
+
+event.preventDefault();
+
+
+const file =
+document.getElementById(
+"document"
+).files[0];
+
+
+const message =
+document.getElementById(
+"message"
+);
+
+
+if (!file) {
+
+message.innerText =
+"❌ Select modified document.";
+
+return;
+
+}
+
+
+message.innerText =
+"⏳ Creating new version...";
+
+
+const formData =
+new FormData();
+
+
+formData.append(
+"document",
+file
+);
+
+
+formData.append(
+"caseId",
+document.getElementById(
+"caseId"
+).value
+);
+
+
+formData.append(
+"documentName",
+document.getElementById(
+"documentName"
+).value
+);
+
+
+formData.append(
+"officerId",
+officerId
+);
+
+
+try {
+
+
+const response =
+await fetch(
+"/api/modify",
+{
+method: "POST",
+body: formData
+}
+);
+
+
+const data =
+await response.json();
+
+
+if (!response.ok ||
+!data.success) {
+
+message.innerText =
+"❌ " +
+(
+data.message ||
+"Modification failed"
+);
+
+return;
+
+}
+
+
+message.innerText =
+"✅ New document version created successfully.";
+
+
+alert(
+"✅ Version " +
+data.version +
+" created successfully!"
+);
+
+
+}
+
+catch(error) {
+
+console.error(error);
+
+message.innerText =
+"❌ Unable to connect to server.";
+
+}
+
+});
+
+</script>
+
+
+</body>
+
+</html>

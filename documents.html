@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Documents</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.document {
+    background: white;
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.document h2 {
+    color: #172b4d;
+    margin-top: 0;
+}
+
+.info {
+    background: #f5f7fa;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.8;
+}
+
+button {
+    padding: 11px 16px;
+    margin-top: 15px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 7px;
+    color: white;
+    background: #172b4d;
+    cursor: pointer;
+}
+
+.modify {
+    background: #8a5a00;
+}
+
+.history {
+    background: #444;
+}
+
+.back {
+    background: #666;
+}
+
+.secure {
+    margin-top: 20px;
+    padding: 15px;
+    background: #eaf7ee;
+    color: #176b35;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    🛡️ EvidenceGuard — Secure Documents
+</div>
+
+<div class="container">
+
+<h1>📁 Secure Documents</h1>
+
+<p>
+Authorized legal and investigation documents
+</p>
+
+<div class="secure">
+🔒 Cybersecurity ACTIVE |
+⛓️ Blockchain READY |
+🔐 Access Control ACTIVE
+</div>
+
+<div id="documents">
+    Loading documents...
+</div>
+
+<br>
+
+<button
+class="back"
+onclick="location.href='dashboard.html'">
+
+← Back to Dashboard
+
+</button>
+
+</div>
+
+
+<script>
+
+const officerId =
+localStorage.getItem("officerId") || "POL1001";
+
+
+async function loadDocuments() {
+
+    const container =
+    document.getElementById("documents");
+
+    try {
+
+        const response =
+        await fetch("/api/documents");
+
+        const data =
+        await response.json();
+
+        console.log("DOCUMENT DATA:", data);
+
+        if (!data.success) {
+
+            container.innerHTML =
+            "<p>❌ Unable to load documents.</p>";
+
+            return;
+        }
+
+
+        if (!data.files ||
+            data.files.length === 0) {
+
+            container.innerHTML =
+            "<p>📂 No documents uploaded yet.</p>";
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.files.forEach(function(file) {
+
+            const div =
+            document.createElement("div");
+
+            div.className = "document";
+
+
+            div.innerHTML = `
+
+                <h2>
+                    📄 ${file.documentName}
+                </h2>
+
+                <div class="info">
+
+                    <b>Case ID:</b>
+                    ${file.caseId}
+                    <br>
+
+                    <b>Document Type:</b>
+                    ${file.documentType}
+                    <br>
+
+                    <b>Original File:</b>
+                    ${file.originalName}
+                    <br>
+
+                    <b>Uploaded By:</b>
+                    ${file.uploadedBy}
+                    <br>
+
+                    <b>Uploaded At:</b>
+                    ${file.uploadedAt}
+                    <br>
+
+                    <b>Version:</b>
+                    ${file.version || 1}
+                    <br>
+
+                    <b>SHA-256:</b>
+                    ${file.hash || "Available in secure storage"}
+
+                </div>
+
+
+                <button
+                onclick="accessDocument('${encodeURIComponent(file.fileName)}')">
+
+                🔐 Access Document
+
+                </button>
+
+
+                <button
+                class="modify"
+                onclick="modifyDocument('${encodeURIComponent(file.documentName)}')">
+
+                ✏️ Modify Document
+
+                </button>
+
+
+                <button
+                class="history"
+                onclick="viewHistory(
+                    '${encodeURIComponent(file.documentName)}',
+                    '${encodeURIComponent(file.caseId)}'
+                )">
+
+                🕘 Version History
+
+                </button>
+
+            `;
+
+
+            container.appendChild(div);
+
+        });
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+
+            <div class="document">
+
+                <h2>
+                    ❌ Unable to Load Documents
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// =================================
+// ACCESS DOCUMENT
+// =================================
+
+function accessDocument(fileName) {
+
+    const url =
+    "/api/document/" +
+    fileName +
+    "?officerId=" +
+    encodeURIComponent(officerId);
+
+    window.open(url, "_blank");
+
+}
+
+
+// =================================
+// MODIFY
+// =================================
+
+function modifyDocument(documentName) {
+
+    window.location.href =
+    "modify.html?documentName=" +
+    documentName;
+
+}
+
+
+// =================================
+// VERSION HISTORY
+// =================================
+
+function viewHistory(
+    documentName,
+    caseId
+) {
+
+    window.location.href =
+    "versions.html?caseId=" +
+    caseId +
+    "&documentName=" +
+    documentName;
+
+}
+
+
+loadDocuments();
+
+</script>
+
+</body>
+
+</html>

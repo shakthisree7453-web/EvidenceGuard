@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Weekly Report</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.header {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.summary {
+    display: grid;
+    grid-template-columns:
+    repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.report {
+    background: white;
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #172b4d;
+    color: white;
+}
+
+.security {
+    margin-top: 25px;
+    padding: 15px;
+    background: #eaf7ee;
+    color: #176b35;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+button {
+    margin-top: 25px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #666;
+    color: white;
+    cursor: pointer;
+}
+
+.print {
+    background: #172b4d;
+    margin-left: 8px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+🛡️ EvidenceGuard — Weekly Security Report
+
+</div>
+
+
+<div class="container">
+
+
+<div class="header">
+
+<h1>
+📊 Weekly Audit Report
+</h1>
+
+<p id="weekRange">
+Loading report period...
+</p>
+
+</div>
+
+
+<div class="summary">
+
+
+<div class="card">
+
+<h3>
+📤 Documents Uploaded
+</h3>
+
+<div
+class="number"
+id="uploads">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+👁️ Documents Accessed
+</h3>
+
+<div
+class="number"
+id="accesses">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+✏️ Documents Modified
+</h3>
+
+<div
+class="number"
+id="modifications">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+🔎 Total Activities
+</h3>
+
+<div
+class="number"
+id="total">
+
+0
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="security">
+
+🔐 Cybersecurity: ACTIVE
+&nbsp; | &nbsp;
+⛓️ Blockchain: READY
+&nbsp; | &nbsp;
+📋 Audit Monitoring: ACTIVE
+
+</div>
+
+
+<!-- WEEKLY SUMMARY -->
+
+<div class="report">
+
+<h2>
+📅 This Week's Activity
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Activity
+</th>
+
+<th>
+Count
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+
+<td>
+📤 Documents Uploaded
+</td>
+
+<td id="uploadTable">
+0
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+👁️ Documents Accessed
+</td>
+
+<td id="accessTable">
+0
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+✏️ Documents Modified
+</td>
+
+<td id="modifyTable">
+0
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+🔎 Total Activities
+</td>
+
+<td id="totalTable">
+0
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- OFFICER -->
+
+<div class="report">
+
+<h2>
+👤 Officer-wise Activity
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Officer ID
+</th>
+
+<th>
+Officer Name
+</th>
+
+<th>
+Role
+</th>
+
+<th>
+Activities
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="officerTable">
+
+<tr>
+
+<td colspan="4">
+Loading...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- DOCUMENT -->
+
+<div class="report">
+
+<h2>
+📄 Document-wise Activity
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Case ID
+</th>
+
+<th>
+Document
+</th>
+
+<th>
+Activities
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="documentTable">
+
+<tr>
+
+<td colspan="3">
+Loading...
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<button
+onclick="location.href='dashboard.html'">
+
+← Back to Dashboard
+
+</button>
+
+
+<button
+class="print"
+onclick="window.print()">
+
+🖨️ Print Report
+
+</button>
+
+
+</div>
+
+
+<script>
+
+
+// ============================================
+// WEEKLY REPORT
+// ============================================
+
+async function loadReport() {
+
+    try {
+
+        const response =
+            await fetch("/api/audit");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Audit API connection failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "AUDIT DATA:",
+            data
+        );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                "Audit data unavailable"
+            );
+
+        }
+
+
+        const allLogs =
+            Array.isArray(data.logs)
+            ? data.logs
+            : [];
+
+
+        // ====================================
+        // LAST 7 DAYS
+        // ====================================
+
+        const now =
+            new Date();
+
+
+        const sevenDaysAgo =
+            new Date(
+                now.getTime() -
+                (7 * 24 * 60 * 60 * 1000)
+            );
+
+
+        const weeklyLogs =
+            allLogs.filter(
+                function(log) {
+
+                    if (!log.dateTime) {
+                        return false;
+                    }
+
+                    const logDate =
+                        new Date(
+                            log.dateTime
+                        );
+
+                    return (
+                        !isNaN(logDate) &&
+                        logDate >= sevenDaysAgo &&
+                        logDate <= now
+                    );
+
+                }
+            );
+
+
+        // ====================================
+        // WEEK RANGE
+        // ====================================
+
+        document.getElementById(
+            "weekRange"
+        ).innerText =
+            "Report Period: " +
+            sevenDaysAgo.toLocaleDateString() +
+            " - " +
+            now.toLocaleDateString();
+
+
+        // ====================================
+        // COUNTS
+        // ====================================
+
+        const uploads =
+            weeklyLogs.filter(
+                log =>
+                    log.action ===
+                    "DOCUMENT UPLOADED"
+            ).length;
+
+
+        const accesses =
+            weeklyLogs.filter(
+                log =>
+                    log.action ===
+                    "DOCUMENT ACCESSED"
+            ).length;
+
+
+        const modifications =
+            weeklyLogs.filter(
+                log =>
+                    log.action ===
+                    "DOCUMENT MODIFIED"
+            ).length;
+
+
+        const total =
+            weeklyLogs.length;
+
+
+        document.getElementById(
+            "uploads"
+        ).innerText = uploads;
+
+
+        document.getElementById(
+            "accesses"
+        ).innerText = accesses;
+
+
+        document.getElementById(
+            "modifications"
+        ).innerText = modifications;
+
+
+        document.getElementById(
+            "total"
+        ).innerText = total;
+
+
+        document.getElementById(
+            "uploadTable"
+        ).innerText = uploads;
+
+
+        document.getElementById(
+            "accessTable"
+        ).innerText = accesses;
+
+
+        document.getElementById(
+            "modifyTable"
+        ).innerText = modifications;
+
+
+        document.getElementById(
+            "totalTable"
+        ).innerText = total;
+
+
+        // ====================================
+        // OFFICER ACTIVITY
+        // ====================================
+
+        const officers = {};
+
+
+        weeklyLogs.forEach(
+            function(log) {
+
+                const id =
+                    log.officerId ||
+                    "UNKNOWN";
+
+                if (!officers[id]) {
+
+                    officers[id] = {
+
+                        name:
+                            log.officerName ||
+                            "Unknown",
+
+                        role:
+                            log.role ||
+                            "Officer",
+
+                        count: 0
+
+                    };
+
+                }
+
+
+                officers[id].count++;
+
+            }
+        );
+
+
+        const officerTable =
+            document.getElementById(
+                "officerTable"
+            );
+
+
+        officerTable.innerHTML = "";
+
+
+        const officerIds =
+            Object.keys(officers);
+
+
+        if (officerIds.length === 0) {
+
+            officerTable.innerHTML = `
+
+                <tr>
+
+                    <td colspan="4">
+                        No officer activity this week.
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+        else {
+
+            officerIds.forEach(
+                function(id) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            👤 ${id}
+                        </td>
+
+                        <td>
+                            ${officers[id].name}
+                        </td>
+
+                        <td>
+                            ${officers[id].role}
+                        </td>
+
+                        <td>
+                            ${officers[id].count}
+                        </td>
+
+                    `;
+
+
+                    officerTable.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+
+        // ====================================
+        // DOCUMENT ACTIVITY
+        // ====================================
+
+        const documents = {};
+
+
+        weeklyLogs.forEach(
+            function(log) {
+
+                const name =
+                    log.documentName ||
+                    log.fileName ||
+                    "Unknown Document";
+
+
+                const caseId =
+                    log.caseId ||
+                    "N/A";
+
+
+                const key =
+                    caseId +
+                    "|" +
+                    name;
+
+
+                if (!documents[key]) {
+
+                    documents[key] = {
+
+                        caseId:
+                            caseId,
+
+                        name:
+                            name,
+
+                        count:
+                            0
+
+                    };
+
+                }
+
+
+                documents[key].count++;
+
+            }
+        );
+
+
+        const documentTable =
+            document.getElementById(
+                "documentTable"
+            );
+
+
+        documentTable.innerHTML = "";
+
+
+        const documentKeys =
+            Object.keys(documents);
+
+
+        if (documentKeys.length === 0) {
+
+            documentTable.innerHTML = `
+
+                <tr>
+
+                    <td colspan="3">
+                        No document activity this week.
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+        else {
+
+            documentKeys.forEach(
+                function(key) {
+
+                    const doc =
+                        documents[key];
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${doc.caseId}
+                        </td>
+
+                        <td>
+                            📄 ${doc.name}
+                        </td>
+
+                        <td>
+                            ${doc.count}
+                        </td>
+
+                    `;
+
+
+                    documentTable.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "REPORT ERROR:",
+            error
+        );
+
+
+        document.getElementById(
+            "weekRange"
+        ).innerText =
+            "❌ Unable to load weekly report";
+
+
+        alert(
+            "Unable to load weekly report."
+        );
+
+    }
+
+}
+
+
+// START
+
+loadReport();
+
+</script>
+
+
+</body>
+
+</html>

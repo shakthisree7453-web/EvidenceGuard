@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Dashboard</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.user {
+    text-align: right;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-bottom: 5px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+}
+
+.number {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.action {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action:hover {
+    transform: translateY(-3px);
+}
+
+.action h2 {
+    margin-top: 0;
+}
+
+.status {
+    margin-top: 25px;
+    padding: 18px;
+    background: #eaf7ee;
+    border-radius: 8px;
+    color: #176b35;
+    font-weight: bold;
+}
+
+.logout {
+    margin-top: 30px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 7px;
+    background: #b42318;
+    color: white;
+    cursor: pointer;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+    <div class="brand">
+        🛡️ EvidenceGuard
+    </div>
+
+    <div class="user">
+
+        <div id="userName">
+            Loading...
+        </div>
+
+        <div id="userRole">
+            Loading...
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="container">
+
+
+<div class="welcome">
+
+<h1>
+    Secure Document Dashboard
+</h1>
+
+<p>
+    Centralized and secure management of
+    legal and investigation documents.
+</p>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+    📁 Total Documents
+</h3>
+
+<div
+class="number"
+id="totalDocuments">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+    👁️ Documents Viewed
+</h3>
+
+<div
+class="number"
+id="totalViews">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+    ✏️ Modifications
+</h3>
+
+<div
+class="number"
+id="totalModifications">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+    ⛓️ Blockchain
+</h3>
+
+<div
+class="number"
+id="blockchainCount">
+
+0
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- FEATURES -->
+
+<div class="actions">
+
+
+<div
+class="action"
+onclick="location.href='documents.html'">
+
+<h2>
+    📁 Documents
+</h2>
+
+<p>
+    View and manage secure legal
+    and investigation documents.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='upload.html'">
+
+<h2>
+    ⬆️ Upload Document
+</h2>
+
+<p>
+    Upload and securely store
+    new documents.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='modify.html'">
+
+<h2>
+    ✏️ Modify Document
+</h2>
+
+<p>
+    Create a new document version
+    while preserving previous versions.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='audit.html'">
+
+<h2>
+    🔎 Audit Trail
+</h2>
+
+<p>
+    Clearly track who viewed,
+    uploaded or modified documents.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='reports.html'">
+
+<h2>
+    📊 Weekly Reports
+</h2>
+
+<p>
+    Monitor weekly document and
+    security activities.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='versions.html'">
+
+<h2>
+    🕘 Version History
+</h2>
+
+<p>
+    Track document versions,
+    modifications and timestamps.
+</p>
+
+</div>
+
+
+<div
+class="action"
+onclick="location.href='security.html'">
+
+<h2>
+    🛡️ Security Center
+</h2>
+
+<p>
+    Verify cybersecurity,
+    SHA-256 and document integrity.
+</p>
+
+</div>
+
+
+</div>
+
+
+<div class="status">
+
+🔒 Cybersecurity: ACTIVE
+&nbsp;&nbsp; | &nbsp;&nbsp;
+⛓️ Blockchain: READY
+&nbsp;&nbsp; | &nbsp;&nbsp;
+#️⃣ SHA-256: ACTIVE
+&nbsp;&nbsp; | &nbsp;&nbsp;
+📋 Audit Trail: ACTIVE
+
+</div>
+
+
+<button
+class="logout"
+onclick="logout()">
+
+Logout
+
+</button>
+
+
+</div>
+
+
+<script>
+
+
+// ==========================================
+// USER
+// ==========================================
+
+const officerId =
+localStorage.getItem("officerId");
+
+const officerName =
+localStorage.getItem("officerName");
+
+const officerRole =
+localStorage.getItem("officerRole");
+
+
+if (!officerId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+document.getElementById(
+    "userName"
+).innerText =
+    officerName || officerId;
+
+
+document.getElementById(
+    "userRole"
+).innerText =
+    officerRole || "Officer";
+
+
+// ==========================================
+// DASHBOARD DATA
+// ==========================================
+
+async function loadDashboard() {
+
+    try {
+
+        // AUDIT
+
+        const auditResponse =
+            await fetch("/api/audit");
+
+        const auditData =
+            await auditResponse.json();
+
+        const logs =
+            auditData.logs || [];
+
+
+        const views =
+            logs.filter(
+                log =>
+                    log.action ===
+                    "DOCUMENT VIEWED"
+            ).length;
+
+
+        const modifications =
+            logs.filter(
+                log =>
+                    log.action ===
+                    "DOCUMENT MODIFIED"
+            ).length;
+
+
+        document.getElementById(
+            "totalViews"
+        ).innerText =
+            views;
+
+
+        document.getElementById(
+            "totalModifications"
+        ).innerText =
+            modifications;
+
+
+        // DOCUMENTS
+
+        const documentResponse =
+            await fetch(
+                "/api/documents"
+            );
+
+        const documentData =
+            await documentResponse.json();
+
+
+        if (documentData.success) {
+
+            document.getElementById(
+                "totalDocuments"
+            ).innerText =
+                documentData.files.length;
+
+        }
+
+
+        // BLOCKCHAIN
+
+        const blockchainResponse =
+            await fetch(
+                "/api/blockchain"
+            );
+
+        const blockchainData =
+            await blockchainResponse.json();
+
+
+        if (
+            blockchainData.success
+        ) {
+
+            document.getElementById(
+                "blockchainCount"
+            ).innerText =
+                blockchainData.records.length;
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+async function logout() {
+
+    try {
+
+        await fetch(
+            "/api/logout",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    officerId:
+                        officerId
+
+                })
+
+            }
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+    }
+
+
+    localStorage.clear();
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+loadDashboard();
+
+</script>
+
+
+</body>
+
+</html>

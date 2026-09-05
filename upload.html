@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvidenceGuard - Upload Document</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+        }
+
+        .navbar {
+            background: #172b4d;
+            color: white;
+            padding: 18px 30px;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #172b4d;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccd5e0;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            margin-top: 22px;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 7px;
+            background: #172b4d;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #0d1c35;
+        }
+
+        .back {
+            background: #666;
+            margin-left: 8px;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .security {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef6ff;
+            border-radius: 8px;
+        }
+
+        #hashBox {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        🛡️ EvidenceGuard
+    </div>
+
+    <div class="container">
+
+        <div class="box">
+
+            <h1>⬆️ Upload Secure Document</h1>
+
+            <p>
+                Store legal and investigation documents
+                securely with integrity verification.
+            </p>
+
+            <form id="uploadForm">
+
+                <label>Case ID</label>
+
+                <input
+                    type="text"
+                    id="caseId"
+                    placeholder="Example: CASE-001"
+                    value="CASE-001"
+                    required
+                >
+
+                <label>Document Type</label>
+
+                <select id="documentType" required>
+
+                    <option value="">
+                        Select Document Type
+                    </option>
+
+                    <option value="FIR">
+                        FIR / Police Report
+                    </option>
+
+                    <option value="Investigation Record">
+                        Investigation Record
+                    </option>
+
+                    <option value="Witness Statement">
+                        Witness Statement
+                    </option>
+
+                    <option value="Charge Sheet">
+                        Charge Sheet
+                    </option>
+
+                    <option value="Court Filing">
+                        Court Filing
+                    </option>
+
+                    <option value="Evidence Record">
+                        Evidence Record
+                    </option>
+
+                    <option value="Forensic Report">
+                        Forensic Report
+                    </option>
+
+                    <option value="Legal Notice">
+                        Legal Notice
+                    </option>
+
+                    <option value="Judgment">
+                        Judgment
+                    </option>
+
+                </select>
+
+                <label>Document Name</label>
+
+                <input
+                    type="text"
+                    id="documentName"
+                    placeholder="Example: FIR Report"
+                    required
+                >
+
+                <label>Select Document</label>
+
+                <input
+                    type="file"
+                    id="document"
+                    required
+                >
+
+                <button type="submit">
+                    🔐 Secure Upload
+                </button>
+
+                <button
+                    type="button"
+                    class="back"
+                    onclick="location.href='dashboard.html'">
+
+                    ← Back
+
+                </button>
+
+            </form>
+
+            <p id="message"></p>
+
+            <div class="security">
+
+                🔒 <b>Security:</b>
+                SHA-256 document integrity verification
+
+                <br><br>
+
+                ⛓️ <b>Blockchain:</b>
+                Upload activity recorded in immutable ledger
+
+                <br><br>
+
+                👤 <b>Access Control:</b>
+                Authorized officers only
+
+            </div>
+
+            <div id="hashBox">
+
+                <b>SHA-256 Hash:</b>
+
+                <p id="hash"></p>
+
+                <b>Version:</b>
+
+                <span id="version"></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const officerId =
+            localStorage.getItem("officerId") ||
+            "POL1001";
+
+
+        document
+            .getElementById("uploadForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
+
+                    event.preventDefault();
+
+                    const message =
+                        document.getElementById(
+                            "message"
+                        );
+
+                    const file =
+                        document.getElementById(
+                            "document"
+                        ).files[0];
+
+                    if (!file) {
+
+                        message.innerText =
+                            "❌ Please select a document.";
+
+                        return;
+                    }
+
+                    message.innerText =
+                        "⏳ Uploading securely...";
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "document",
+                        file
+                    );
+
+
+                    formData.append(
+                        "caseId",
+                        document.getElementById(
+                            "caseId"
+                        ).value
+                    );
+
+
+                    formData.append(
+                        "documentType",
+                        document.getElementById(
+                            "documentType"
+                        ).value
+                    );
+
+
+                    formData.append(
+                        "documentName",
+                        document.getElementById(
+                            "documentName"
+                        ).value
+                    );
+
+
+                    formData.append(
+                        "officerId",
+                        officerId
+                    );
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/upload",
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok ||
+                            !data.success) {
+
+                            message.innerText =
+                                "❌ " +
+                                (
+                                    data.message ||
+                                    "Upload failed"
+                                );
+
+                            return;
+                        }
+
+
+                        message.innerText =
+                            "✅ Document uploaded successfully!";
+
+
+                        document.getElementById(
+                            "hashBox"
+                        ).style.display =
+                            "block";
+
+
+                        document.getElementById(
+                            "hash"
+                        ).innerText =
+                            data.hash;
+
+
+                        document.getElementById(
+                            "version"
+                        ).innerText =
+                            data.version;
+
+
+                        document.getElementById(
+                            "uploadForm"
+                        ).reset();
+
+
+                    }
+
+                    catch (error) {
+
+                        console.error(error);
+
+                        message.innerText =
+                            "❌ Unable to connect to EvidenceGuard server.";
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

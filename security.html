@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EvidenceGuard - Security Center</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #172b4d;
+}
+
+.navbar {
+    background: #172b4d;
+    color: white;
+    padding: 18px 30px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.header,
+.card,
+.blockchain,
+.integrity,
+.security-status {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+h1,
+h2 {
+    margin-top: 0;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.status-card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.icon {
+    font-size: 35px;
+}
+
+.status {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #16833b;
+}
+
+.block {
+    border: 1px solid #d9e0e8;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 9px;
+    background: #fafbfd;
+}
+
+.hash {
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 13px;
+    background: #eef2f7;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 7px;
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #172b4d;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.back {
+    background: #666;
+}
+
+#message {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.verified {
+    color: #16833b;
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+🛡️ EvidenceGuard — Security Center
+
+</div>
+
+
+<div class="container">
+
+
+<div class="header">
+
+<h1>
+🔐 Security & Blockchain Center
+</h1>
+
+<p>
+Monitor cybersecurity, document integrity,
+SHA-256 hashes and blockchain-style audit records.
+</p>
+
+</div>
+
+
+<!-- SECURITY STATUS -->
+
+<div class="status-grid">
+
+
+<div class="status-card">
+
+<div class="icon">
+🛡️
+</div>
+
+<h3>
+Cybersecurity
+</h3>
+
+<div
+class="status"
+id="cybersecurity">
+
+Checking...
+
+</div>
+
+</div>
+
+
+<div class="status-card">
+
+<div class="icon">
+⛓️
+</div>
+
+<h3>
+Blockchain Ledger
+</h3>
+
+<div
+class="status"
+id="blockchainStatus">
+
+Checking...
+
+</div>
+
+</div>
+
+
+<div class="status-card">
+
+<div class="icon">
+#️⃣
+</div>
+
+<h3>
+SHA-256 Integrity
+</h3>
+
+<div
+class="status"
+id="hashStatus">
+
+ACTIVE
+
+</div>
+
+</div>
+
+
+<div class="status-card">
+
+<div class="icon">
+📋
+</div>
+
+<h3>
+Audit Trail
+</h3>
+
+<div
+class="status"
+id="auditStatus">
+
+ACTIVE
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- BLOCKCHAIN -->
+
+<div class="blockchain">
+
+<h2>
+⛓️ Blockchain Ledger
+</h2>
+
+<p>
+Each document activity creates a cryptographic
+block linked to the previous block.
+</p>
+
+<div id="blockchainRecords">
+
+Loading blockchain records...
+
+</div>
+
+</div>
+
+
+<!-- INTEGRITY -->
+
+<div class="integrity">
+
+<h2>
+🔎 Document Integrity Verification
+</h2>
+
+<p>
+Select a document to verify whether the current
+file matches its stored SHA-256 hash.
+</p>
+
+<select
+id="documentSelect"
+style="
+width:100%;
+padding:12px;
+border-radius:7px;
+border:1px solid #ccd5e0;
+">
+
+<option value="">
+Loading documents...
+</option>
+
+</select>
+
+<br>
+
+<button
+onclick="verifyIntegrity()">
+
+🔎 Verify Document Integrity
+
+</button>
+
+<div id="message"></div>
+
+</div>
+
+
+<!-- SECURITY -->
+
+<div class="security-status">
+
+<h2>
+🛡️ Security Features
+</h2>
+
+<p>✅ Secure Officer Authentication</p>
+
+<p>✅ Role-Based Access Control</p>
+
+<p>✅ SHA-256 Document Hashing</p>
+
+<p>✅ Document Version Control</p>
+
+<p>✅ Complete Audit Trail</p>
+
+<p>✅ Blockchain-Style Immutable Ledger</p>
+
+<p>✅ Document Tamper Detection</p>
+
+<p>✅ Unauthorized Access Prevention</p>
+
+</div>
+
+
+<button
+class="back"
+onclick="location.href='dashboard.html'">
+
+← Back to Dashboard
+
+</button>
+
+
+</div>
+
+
+<script>
+
+
+// ==========================================
+// SERVER STATUS
+// ==========================================
+
+async function loadStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            document.getElementById(
+                "cybersecurity"
+            ).innerText =
+                "🟢 " +
+                data.cybersecurity;
+
+
+            document.getElementById(
+                "blockchainStatus"
+            ).innerText =
+                "🟢 " +
+                data.blockchain;
+
+        }
+
+    }
+
+    catch(error) {
+
+        document.getElementById(
+            "cybersecurity"
+        ).innerText =
+            "🔴 OFFLINE";
+
+        document.getElementById(
+            "blockchainStatus"
+        ).innerText =
+            "🔴 OFFLINE";
+
+    }
+
+}
+
+
+// ==========================================
+// LOAD DOCUMENTS
+// ==========================================
+
+async function loadDocuments() {
+
+    const select =
+        document.getElementById(
+            "documentSelect"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/documents"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success ||
+            !Array.isArray(data.files)
+        ) {
+
+            throw new Error(
+                "Unable to load documents"
+            );
+
+        }
+
+
+        select.innerHTML =
+            '<option value="">Select Document</option>';
+
+
+        data.files.forEach(
+            function(document) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    document.fileName;
+
+
+                option.textContent =
+                    document.documentName +
+                    " | " +
+                    document.caseId;
+
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        if (data.files.length === 0) {
+
+            select.innerHTML =
+                '<option value="">No documents available</option>';
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        select.innerHTML =
+            '<option value="">Unable to load documents</option>';
+
+    }
+
+}
+
+
+// ==========================================
+// BLOCKCHAIN RECORDS
+// ==========================================
+
+async function loadBlockchain() {
+
+    const container =
+        document.getElementById(
+            "blockchainRecords"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/blockchain"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success ||
+            !Array.isArray(data.records)
+        ) {
+
+            throw new Error(
+                "Blockchain data unavailable"
+            );
+
+        }
+
+
+        if (data.records.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="block">
+
+                    No blockchain records yet.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.records
+        .slice()
+        .reverse()
+        .forEach(
+            function(block, index) {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "block";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ⛓️ Block #${
+                            data.records.length - index
+                        }
+                    </h3>
+
+                    <p>
+                        <b>Document:</b>
+                        ${block.documentName}
+                    </p>
+
+                    <p>
+                        <b>Action:</b>
+                        ${block.action}
+                    </p>
+
+                    <p>
+                        <b>Officer:</b>
+                        ${block.officerId}
+                    </p>
+
+                    <p>
+                        <b>Version:</b>
+                        ${block.version}
+                    </p>
+
+                    <p>
+                        <b>Timestamp:</b>
+                        ${block.timestamp}
+                    </p>
+
+                    <p>
+                        <b>Previous Block Hash:</b>
+                    </p>
+
+                    <div class="hash">
+                        ${block.previousHash}
+                    </div>
+
+                    <p>
+                        <b>Current Block Hash:</b>
+                    </p>
+
+                    <div class="hash">
+                        ${block.blockHash}
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+
+            <div class="block">
+
+                ❌ Unable to load blockchain records.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// INTEGRITY VERIFICATION
+// ==========================================
+
+async function verifyIntegrity() {
+
+    const fileName =
+        document.getElementById(
+            "documentSelect"
+        ).value;
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    if (!fileName) {
+
+        message.innerHTML =
+            "⚠️ Please select a document.";
+
+        return;
+
+    }
+
+
+    message.innerHTML =
+        "⏳ Verifying SHA-256 hash...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/integrity/" +
+                encodeURIComponent(
+                    fileName
+                )
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok ||
+            !data.success) {
+
+            message.innerHTML =
+                "❌ " +
+                (
+                    data.message ||
+                    "Verification failed"
+                );
+
+            return;
+
+        }
+
+
+        if (
+            data.integrity ===
+            "VERIFIED"
+        ) {
+
+            message.innerHTML = `
+
+                <span class="verified">
+
+                ✅ INTEGRITY VERIFIED
+
+                </span>
+
+                <br><br>
+
+                Document:
+                ${data.document}
+
+                <br><br>
+
+                Stored SHA-256:
+
+                <div class="hash">
+                    ${data.storedHash}
+                </div>
+
+                Current SHA-256:
+
+                <div class="hash">
+                    ${data.currentHash}
+                </div>
+
+            `;
+
+        }
+
+        else {
+
+            message.innerHTML = `
+
+                ❌ <b>TAMPER DETECTED</b>
+
+                <br><br>
+
+                Stored SHA-256:
+
+                <div class="hash">
+                    ${data.storedHash}
+                </div>
+
+                Current SHA-256:
+
+                <div class="hash">
+                    ${data.currentHash}
+                </div>
+
+            `;
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        message.innerHTML =
+            "❌ Unable to connect to server.";
+
+    }
+
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
+loadStatus();
+
+loadDocuments();
+
+loadBlockchain();
+
+</script>
+
+
+</body>
+
+</html>
