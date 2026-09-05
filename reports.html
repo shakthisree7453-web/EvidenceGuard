@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -103,6 +104,16 @@ th {
     font-weight: bold;
 }
 
+.error {
+    margin-top: 25px;
+    padding: 15px;
+    background: #fdecec;
+    color: #b42318;
+    border-radius: 8px;
+    font-weight: bold;
+    display: none;
+}
+
 button {
     margin-top: 25px;
     padding: 12px 20px;
@@ -136,6 +147,8 @@ button {
 <div class="container">
 
 
+<!-- HEADER -->
+
 <div class="header">
 
 <h1>
@@ -148,6 +161,8 @@ Loading report period...
 
 </div>
 
+
+<!-- SUMMARY -->
 
 <div class="summary">
 
@@ -172,7 +187,7 @@ id="uploads">
 <div class="card">
 
 <h3>
-👁️ Documents Accessed
+👁️ Documents Viewed
 </h3>
 
 <div
@@ -223,6 +238,8 @@ id="total">
 </div>
 
 
+<!-- SECURITY STATUS -->
+
 <div class="security">
 
 🔐 Cybersecurity: ACTIVE
@@ -230,6 +247,17 @@ id="total">
 ⛓️ Blockchain: READY
 &nbsp; | &nbsp;
 📋 Audit Monitoring: ACTIVE
+
+</div>
+
+
+<!-- ERROR -->
+
+<div
+id="errorBox"
+class="error">
+
+❌ Unable to load weekly audit report.
 
 </div>
 
@@ -279,7 +307,7 @@ Count
 <tr>
 
 <td>
-👁️ Documents Accessed
+👁️ Documents Viewed
 </td>
 
 <td id="accessTable">
@@ -321,7 +349,7 @@ Count
 </div>
 
 
-<!-- OFFICER -->
+<!-- OFFICER ACTIVITY -->
 
 <div class="report">
 
@@ -355,6 +383,7 @@ Activities
 
 </thead>
 
+
 <tbody id="officerTable">
 
 <tr>
@@ -372,7 +401,7 @@ Loading...
 </div>
 
 
-<!-- DOCUMENT -->
+<!-- DOCUMENT ACTIVITY -->
 
 <div class="report">
 
@@ -401,6 +430,7 @@ Activities
 </tr>
 
 </thead>
+
 
 <tbody id="documentTable">
 
@@ -443,21 +473,36 @@ onclick="window.print()">
 
 
 // ============================================
-// WEEKLY REPORT
+// LOAD WEEKLY REPORT
 // ============================================
 
 async function loadReport() {
 
+    const errorBox =
+        document.getElementById(
+            "errorBox"
+        );
+
     try {
 
+        errorBox.style.display =
+            "none";
+
+
+        // ==============================
+        // CALL WEEKLY API
+        // ==============================
+
         const response =
-            await fetch("/api/audit");
+            await fetch(
+                "/api/audit/weekly"
+            );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Audit API connection failed"
+                "Weekly Audit API failed"
             );
 
         }
@@ -468,162 +513,148 @@ async function loadReport() {
 
 
         console.log(
-            "AUDIT DATA:",
+            "WEEKLY REPORT:",
             data
         );
 
 
-        if (!data.success) {
+        if (
+            !data.success ||
+            !data.report
+        ) {
 
             throw new Error(
-                "Audit data unavailable"
+                "Weekly report unavailable"
             );
 
         }
 
 
-        const allLogs =
-            Array.isArray(data.logs)
-            ? data.logs
-            : [];
+        const report =
+            data.report;
 
 
-        // ====================================
-        // LAST 7 DAYS
-        // ====================================
-
-        const now =
-            new Date();
-
-
-        const sevenDaysAgo =
-            new Date(
-                now.getTime() -
-                (7 * 24 * 60 * 60 * 1000)
-            );
-
-
-        const weeklyLogs =
-            allLogs.filter(
-                function(log) {
-
-                    if (!log.dateTime) {
-                        return false;
-                    }
-
-                    const logDate =
-                        new Date(
-                            log.dateTime
-                        );
-
-                    return (
-                        !isNaN(logDate) &&
-                        logDate >= sevenDaysAgo &&
-                        logDate <= now
-                    );
-
-                }
-            );
-
-
-        // ====================================
-        // WEEK RANGE
-        // ====================================
+        // ==============================
+        // REPORT PERIOD
+        // ==============================
 
         document.getElementById(
             "weekRange"
         ).innerText =
             "Report Period: " +
-            sevenDaysAgo.toLocaleDateString() +
-            " - " +
-            now.toLocaleDateString();
+            report.period;
 
 
-        // ====================================
+        // ==============================
         // COUNTS
-        // ====================================
+        // ==============================
 
         const uploads =
-            weeklyLogs.filter(
-                log =>
-                    log.action ===
-                    "DOCUMENT UPLOADED"
-            ).length;
+            Number(
+                report.uploads || 0
+            );
 
 
-        const accesses =
-            weeklyLogs.filter(
-                log =>
-                    log.action ===
-                    "DOCUMENT ACCESSED"
-            ).length;
+        const views =
+            Number(
+                report.views || 0
+            );
 
 
         const modifications =
-            weeklyLogs.filter(
-                log =>
-                    log.action ===
-                    "DOCUMENT MODIFIED"
-            ).length;
+            Number(
+                report.modifications || 0
+            );
 
 
         const total =
-            weeklyLogs.length;
+            Number(
+                report.totalActivities || 0
+            );
 
+
+        // ==============================
+        // SUMMARY CARDS
+        // ==============================
 
         document.getElementById(
             "uploads"
-        ).innerText = uploads;
+        ).innerText =
+            uploads;
 
 
         document.getElementById(
             "accesses"
-        ).innerText = accesses;
+        ).innerText =
+            views;
 
 
         document.getElementById(
             "modifications"
-        ).innerText = modifications;
+        ).innerText =
+            modifications;
 
 
         document.getElementById(
             "total"
-        ).innerText = total;
+        ).innerText =
+            total;
 
+
+        // ==============================
+        // SUMMARY TABLE
+        // ==============================
 
         document.getElementById(
             "uploadTable"
-        ).innerText = uploads;
+        ).innerText =
+            uploads;
 
 
         document.getElementById(
             "accessTable"
-        ).innerText = accesses;
+        ).innerText =
+            views;
 
 
         document.getElementById(
             "modifyTable"
-        ).innerText = modifications;
+        ).innerText =
+            modifications;
 
 
         document.getElementById(
             "totalTable"
-        ).innerText = total;
+        ).innerText =
+            total;
 
 
-        // ====================================
-        // OFFICER ACTIVITY
-        // ====================================
+        // ==============================
+        // ACTIVITIES
+        // ==============================
+
+        const logs =
+            Array.isArray(
+                report.activities
+            )
+            ? report.activities
+            : [];
+
+
+        // ==============================
+        // OFFICER-WISE ACTIVITY
+        // ==============================
 
         const officers = {};
 
 
-        weeklyLogs.forEach(
+        logs.forEach(
             function(log) {
 
                 const id =
                     log.officerId ||
                     "UNKNOWN";
+
 
                 if (!officers[id]) {
 
@@ -637,7 +668,8 @@ async function loadReport() {
                             log.role ||
                             "Officer",
 
-                        count: 0
+                        count:
+                            0
 
                     };
 
@@ -660,17 +692,24 @@ async function loadReport() {
 
 
         const officerIds =
-            Object.keys(officers);
+            Object.keys(
+                officers
+            );
 
 
-        if (officerIds.length === 0) {
+        if (
+            officerIds.length === 0
+        ) {
 
             officerTable.innerHTML = `
 
                 <tr>
 
                     <td colspan="4">
-                        No officer activity this week.
+
+                        No officer activity
+                        this week.
+
                     </td>
 
                 </tr>
@@ -683,6 +722,10 @@ async function loadReport() {
 
             officerIds.forEach(
                 function(id) {
+
+                    const officer =
+                        officers[id];
+
 
                     const row =
                         document.createElement(
@@ -697,15 +740,15 @@ async function loadReport() {
                         </td>
 
                         <td>
-                            ${officers[id].name}
+                            ${officer.name}
                         </td>
 
                         <td>
-                            ${officers[id].role}
+                            ${officer.role}
                         </td>
 
                         <td>
-                            ${officers[id].count}
+                            ${officer.count}
                         </td>
 
                     `;
@@ -721,31 +764,31 @@ async function loadReport() {
         }
 
 
-        // ====================================
-        // DOCUMENT ACTIVITY
-        // ====================================
+        // ==============================
+        // DOCUMENT-WISE ACTIVITY
+        // ==============================
 
         const documents = {};
 
 
-        weeklyLogs.forEach(
+        logs.forEach(
             function(log) {
-
-                const name =
-                    log.documentName ||
-                    log.fileName ||
-                    "Unknown Document";
-
 
                 const caseId =
                     log.caseId ||
                     "N/A";
 
 
+                const documentName =
+                    log.documentName ||
+                    log.fileName ||
+                    "Unknown Document";
+
+
                 const key =
                     caseId +
                     "|" +
-                    name;
+                    documentName;
 
 
                 if (!documents[key]) {
@@ -756,7 +799,7 @@ async function loadReport() {
                             caseId,
 
                         name:
-                            name,
+                            documentName,
 
                         count:
                             0
@@ -782,17 +825,24 @@ async function loadReport() {
 
 
         const documentKeys =
-            Object.keys(documents);
+            Object.keys(
+                documents
+            );
 
 
-        if (documentKeys.length === 0) {
+        if (
+            documentKeys.length === 0
+        ) {
 
             documentTable.innerHTML = `
 
                 <tr>
 
                     <td colspan="3">
-                        No document activity this week.
+
+                        No document activity
+                        this week.
+
                     </td>
 
                 </tr>
@@ -848,7 +898,7 @@ async function loadReport() {
     catch(error) {
 
         console.error(
-            "REPORT ERROR:",
+            "WEEKLY REPORT ERROR:",
             error
         );
 
@@ -856,19 +906,22 @@ async function loadReport() {
         document.getElementById(
             "weekRange"
         ).innerText =
-            "❌ Unable to load weekly report";
+            "Report unavailable";
 
 
-        alert(
-            "Unable to load weekly report."
-        );
+        document.getElementById(
+            "errorBox"
+        ).style.display =
+            "block";
 
     }
 
 }
 
 
+// ============================================
 // START
+// ============================================
 
 loadReport();
 
@@ -878,3 +931,4 @@ loadReport();
 </body>
 
 </html>
+```
