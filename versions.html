@@ -1,28 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EvidenceGuard - Version History</title>
 
 <style>
-
 * {
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
-
 body {
     margin: 0;
     background: #f4f7fb;
     color: #172b4d;
 }
-
 .navbar {
     background: #172b4d;
     color: white;
@@ -30,34 +23,29 @@ body {
     font-size: 23px;
     font-weight: bold;
 }
-
 .container {
     max-width: 1100px;
     margin: 35px auto;
     padding: 20px;
 }
-
-.header {
+.header, .version, .empty {
     background: white;
-    padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
-
+.header {
+    padding: 25px;
+}
 .version {
-    background: white;
     margin-top: 20px;
     padding: 22px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow-wrap: anywhere;
 }
-
 .version-number {
     font-size: 24px;
     font-weight: bold;
     color: #172b4d;
 }
-
 .info {
     margin-top: 15px;
     background: #f5f7fa;
@@ -65,7 +53,6 @@ body {
     border-radius: 8px;
     line-height: 1.9;
 }
-
 .current {
     display: inline-block;
     margin-left: 10px;
@@ -75,375 +62,218 @@ body {
     color: #176b35;
     font-size: 12px;
 }
-
 button {
-    margin-top: 25px;
+    margin-top: 20px;
     padding: 12px 20px;
     border: none;
     border-radius: 7px;
-    background: #666;
+    background: #172b4d;
     color: white;
     cursor: pointer;
 }
-
-.open {
-    background: #172b4d;
-    margin-top: 15px;
+button:hover {
+    opacity: 0.88;
 }
-
 .empty {
-    background: white;
     padding: 30px;
     margin-top: 20px;
-    border-radius: 10px;
     text-align: center;
 }
-
+.status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 7px;
+    background: #eef3f9;
+    overflow-wrap: anywhere;
+}
 </style>
-
 </head>
 
-
 <body>
-
-
-<div class="navbar">
-
-🛡️ EvidenceGuard — Version History
-
-</div>
-
+<div class="navbar">🛡️ EvidenceGuard — Version History</div>
 
 <div class="container">
+    <div class="header">
+        <h1>🕘 Document Version History</h1>
+        <p>Track every modification made to the document.</p>
+        <div id="documentInfo">Loading document information...</div>
+        <div id="status" class="status">Loading version history...</div>
+    </div>
 
+    <div id="versions"></div>
 
-<div class="header">
-
-<h1>
-🕘 Document Version History
-</h1>
-
-<p>
-Track every modification made to the document.
-</p>
-
-<div id="documentInfo">
-Loading...
+    <button onclick="location.href='documents.html'">
+        ← Back to Documents
+    </button>
 </div>
-
-</div>
-
-
-<div id="versions">
-
-Loading version history...
-
-</div>
-
-
-<button
-onclick="location.href='documents.html'">
-
-← Back to Documents
-
-</button>
-
-
-</div>
-
 
 <script>
+const params = new URLSearchParams(window.location.search);
 
+const caseId = params.get("caseId") || "";
+const documentName = params.get("documentName") || "";
 
-// ============================================
-// GET URL PARAMETERS
-// ============================================
+const documentInfo = document.getElementById("documentInfo");
+const container = document.getElementById("versions");
+const statusBox = document.getElementById("status");
 
-const params =
-new URLSearchParams(
-window.location.search
-);
-
-
-const caseId =
-params.get("caseId");
-
-
-const documentName =
-params.get("documentName");
-
-
-const decodedCaseId =
-caseId
-? decodeURIComponent(caseId)
-: "";
-
-
-const decodedDocumentName =
-documentName
-? decodeURIComponent(documentName)
-: "";
-
-
-document.getElementById(
-"documentInfo"
-).innerHTML = `
-
-<b>Case ID:</b>
-${decodedCaseId || "N/A"}
-
-<br>
-
-<b>Document:</b>
-${decodedDocumentName || "N/A"}
-
+documentInfo.innerHTML = `
+    <b>Case ID:</b> ${escapeHTML(caseId || "N/A")}
+    <br>
+    <b>Document:</b> ${escapeHTML(documentName || "N/A")}
 `;
 
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
 
-// ============================================
-// LOAD VERSION HISTORY
-// ============================================
+function formatDate(value) {
+    if (!value) return "N/A";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+        ? escapeHTML(value)
+        : escapeHTML(date.toLocaleString());
+}
 
 async function loadVersions() {
+    container.innerHTML = "";
 
-    const container =
-        document.getElementById(
-            "versions"
-        );
-
+    if (!caseId || !documentName) {
+        statusBox.textContent =
+            "Missing Case ID or Document Name. Open Version History from the Documents page.";
+        return;
+    }
 
     try {
+        const url =
+            "/api/versions/" +
+            encodeURIComponent(caseId) +
+            "/" +
+            encodeURIComponent(documentName);
 
-        const response =
-            await fetch(
-                "/api/versions/" +
-                encodeURIComponent(
-                    decodedCaseId
-                ) +
-                "/" +
-                encodeURIComponent(
-                    decodedDocumentName
-                )
-            );
-
+        const response = await fetch(url);
 
         if (!response.ok) {
-
-            throw new Error(
-                "Unable to load version history"
-            );
-
+            throw new Error("Server returned HTTP " + response.status);
         }
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         if (!data.success) {
-
-            throw new Error(
-                "Version data unavailable"
-            );
-
+            throw new Error(data.message || "Version data unavailable.");
         }
 
-
-        const versions =
-            Array.isArray(data.versions)
+        const versions = Array.isArray(data.versions)
             ? data.versions
             : [];
 
-
         if (versions.length === 0) {
+            statusBox.textContent =
+                "No versions found for this case and document.";
 
             container.innerHTML = `
-
                 <div class="empty">
-
-                    <h2>
-                        📂 No Versions Found
-                    </h2>
-
-                    <p>
-                        No modifications have been
-                        recorded for this document yet.
-                    </p>
-
-                </div>
-
-            `;
-
+                    <h2>📂 No Versions Found</h2>
+                    <p>Check that the Case ID and Document Name match the database.</p>
+                    <p><b>Case:</b> ${escapeHTML(caseId)}</p>
+                    <p><b>Document:</b> ${escapeHTML(documentName)}</p>
+                </div>`;
             return;
-
         }
 
+        statusBox.textContent =
+            "Successfully loaded " + versions.length + " version record(s).";
 
-        container.innerHTML = "";
+        // Show newest modification first.
+        versions.sort(function(a, b) {
+            return new Date(b.modifiedAt || 0) -
+                   new Date(a.modifiedAt || 0);
+        });
 
+        versions.forEach(function(version, index) {
+            const card = document.createElement("div");
+            card.className = "version";
 
-        versions
-        .slice()
-        .reverse()
-        .forEach(
-            function(version, index) {
+            const heading = document.createElement("div");
+            heading.className = "version-number";
+            heading.textContent = "Version " + (version.version ?? "N/A");
 
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "version";
-
-
-                const latest =
-                    index === 0;
-
-
-                div.innerHTML = `
-
-                    <div class="version-number">
-
-                        Version ${version.version}
-
-                        ${
-                            latest
-                            ? '<span class="current">LATEST</span>'
-                            : ''
-                        }
-
-                    </div>
-
-
-                    <div class="info">
-
-                        <b>Case ID:</b>
-                        ${version.caseId || "N/A"}
-
-                        <br>
-
-                        <b>Document:</b>
-                        ${version.documentName || "N/A"}
-
-                        <br>
-
-                        <b>File:</b>
-                        ${version.fileName || "N/A"}
-
-                        <br>
-
-                        <b>Modified By:</b>
-                        👤 ${version.modifiedBy || "N/A"}
-
-                        <br>
-
-                        <b>Modified At:</b>
-                        🕐 ${version.modifiedAt || "N/A"}
-
-                    </div>
-
-
-                    <button
-                    class="open"
-                    onclick="
-                        openVersion(
-                            '${encodeURIComponent(
-                                version.fileName
-                            )}'
-                        )
-                    ">
-
-                    📄 Open Version
-
-                    </button>
-
-                `;
-
-
-                container.appendChild(div);
-
+            if (index === 0) {
+                const badge = document.createElement("span");
+                badge.className = "current";
+                badge.textContent = "LATEST";
+                heading.appendChild(badge);
             }
-        );
 
-    }
+            const info = document.createElement("div");
+            info.className = "info";
+            info.innerHTML = `
+                <b>Case ID:</b> ${escapeHTML(version.caseId || "N/A")}
+                <br>
+                <b>Document:</b> ${escapeHTML(version.documentName || "N/A")}
+                <br>
+                <b>File:</b> ${escapeHTML(version.fileName || "N/A")}
+                <br>
+                <b>Action:</b> ${escapeHTML(version.action || "N/A")}
+                <br>
+                <b>Modified By:</b> ${escapeHTML(version.modifiedBy || "N/A")}
+                <br>
+                <b>Modified At:</b> ${formatDate(version.modifiedAt)}
+                <br>
+                <b>Hash:</b> ${escapeHTML(version.hash || "N/A")}
+            `;
 
+            const openButton = document.createElement("button");
+            openButton.textContent = "📄 Open Version";
+            openButton.addEventListener("click", function() {
+                openVersion(version.fileName);
+            });
 
-    catch(error) {
-
-        console.error(error);
-
+            card.appendChild(heading);
+            card.appendChild(info);
+            card.appendChild(openButton);
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Version history error:", error);
+        statusBox.textContent = "Unable to load version history: " + error.message;
 
         container.innerHTML = `
-
             <div class="empty">
-
-                <h2>
-                    ❌ Unable to Load Version History
-                </h2>
-
-                <p>
-                    ${error.message}
-                </p>
-
-            </div>
-
-        `;
-
+                <h2>❌ Unable to Load Version History</h2>
+                <p>${escapeHTML(error.message)}</p>
+                <p>Check that the backend server is running and the API URL is correct.</p>
+                <button onclick="loadVersions()">🔄 Try Again</button>
+            </div>`;
     }
-
 }
 
+function openVersion(fileName) {
+    if (!fileName) {
+        alert("File name is missing for this version.");
+        return;
+    }
 
-// ============================================
-// OPEN VERSION
-// ============================================
-
-function openVersion(
-    encodedFileName
-) {
-
-    const fileName =
-        decodeURIComponent(
-            encodedFileName
-        );
-
-
-    const officerId =
-        localStorage.getItem(
-            "officerId"
-        ) || "POL1001";
-
+    const officerId = localStorage.getItem("officerId") || "POL1001";
 
     const url =
         "/api/document/" +
-        encodeURIComponent(
-            fileName
-        ) +
+        encodeURIComponent(fileName) +
         "?officerId=" +
-        encodeURIComponent(
-            officerId
-        );
+        encodeURIComponent(officerId);
 
-
-    window.open(
-        url,
-        "_blank"
-    );
-
+    window.open(url, "_blank");
 }
 
-
-// ============================================
-// START
-// ============================================
-
 loadVersions();
-
 </script>
-
-
 </body>
-
 </html>
